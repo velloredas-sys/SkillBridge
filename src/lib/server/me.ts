@@ -361,7 +361,12 @@ export const generatePlan = createServerFn({ method: "POST" })
 Student: ${profile.name}, ${profile.yearLabel || "student"} at ${profile.collegeName || "college"}.
 Career goal: ${profile.careerGoal || "SDE"}.
 Current skill levels (0-5): ${summary || "none rated yet"}.
-Write an 8-week plan. Use short headings (Week 1-2, etc). Name specific free YouTube instructors (freeCodeCamp, CodeWithHarry, Abdul Bari, Kunal Kushwaha, NeetCode, SuperSimpleDev, Traversy) where relevant. No fluff, no emoji, no markdown tables. Max 400 words.`;
+Write an 8-week plan, formatted as clean Markdown:
+- Use a "## Week X-Y" heading for each two-week block (## Week 1-2, ## Week 3-4, etc).
+- Under each heading, use a short "-" bullet list — one bullet per skill or action item.
+- Wrap skill names and instructor names in **bold** so they stand out.
+- Do not use tables, emoji, or numbered headings like "1." or "2.".
+Name specific free YouTube instructors (freeCodeCamp, CodeWithHarry, Abdul Bari, Kunal Kushwaha, NeetCode, SuperSimpleDev, Traversy) where relevant. No fluff. Max 400 words.`;
 
     if (groqKey) {
       try {
