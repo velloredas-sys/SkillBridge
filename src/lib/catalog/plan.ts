@@ -54,8 +54,8 @@ export function buildLocalPlan(input: {
 
   const blocks: string[] = [];
   blocks.push(
-    `8-week plan for ${who}`,
-    `Goal: ${goalTitle}`,
+    `**8-week plan for ${who}**`,
+    `Goal: **${goalTitle}**`,
     "",
     "This plan is built from your current skill ratings and quiz results. Close the biggest gaps first. Sit the matching SkillBridge quiz at the end of each block so the intern board can score you honestly.",
     "",
@@ -63,12 +63,12 @@ export function buildLocalPlan(input: {
 
   const pair = (a: (typeof top)[number] | undefined, b: (typeof top)[number] | undefined, weeks: string, extra: string) => {
     const skills = [a, b].filter(Boolean) as typeof top;
-    const names = skills.map((s) => s.name).join(" + ") || "foundations";
+    const names = skills.map((s) => `**${s.name}**`).join(" + ") || "foundations";
     const lines = skills.map(
       (s) =>
-        `- ${s.name}: you are at ${s.have}/5, roles want ${s.need}/5. Watch ${instructor(s.skillId)}. 60–90 minutes most days, then 2–3 practice problems.`,
+        `- **${s.name}**: you are at ${s.have}/5, roles want ${s.need}/5. Watch ${instructor(s.skillId)}. 60–90 minutes most days, then 2–3 practice problems.`,
     );
-    blocks.push(weeks);
+    blocks.push(`## ${weeks}`);
     blocks.push(names + ".");
     blocks.push(...lines);
     blocks.push(extra);
@@ -78,27 +78,27 @@ export function buildLocalPlan(input: {
   pair(
     top[0],
     top[1],
-    "Week 1–2",
+    "Week 1-2",
     "Finish one full beginner course, not three intros. Mark the SkillBridge lessons done as you go.",
   );
   pair(
     top[2] ?? top[0],
     top[3] ?? top[1],
-    "Week 3–4",
+    "Week 3-4",
     "Start a tiny project that uses both skills (a CLI, a CRUD page, or 20 DSA problems on one pattern).",
   );
   pair(
     top[4] ?? top[1],
     top[5] ?? top[2],
-    "Week 5–6",
+    "Week 5-6",
     "Git every day. Push the project. Write a 5-line README. That is what recruiters actually open.",
   );
 
-  blocks.push("Week 7–8");
+  blocks.push("## Week 7-8");
   blocks.push("Interview loop.");
   blocks.push(
-    `- DSA: NeetCode Two Sum, then 15 problems from Striver's A2Z sheet. Name the pattern out loud.`,
-    `- Apply on SkillBridge to the demo roles that match ${goalTitle}. Use the cover note to point at the project.`,
+    `- **DSA**: NeetCode Two Sum, then 15 problems from Striver's A2Z sheet. Name the pattern out loud.`,
+    `- Apply on SkillBridge to the demo roles that match **${goalTitle}**. Use the cover note to point at the project.`,
     `- Re-sit quizzes for your top three gaps so assessed scores replace self-ratings.`,
     "",
     "Cadence: 90 minutes on weekdays, one longer block on Saturday. If a week slips, do not restart — cut the extra course and keep the project.",
