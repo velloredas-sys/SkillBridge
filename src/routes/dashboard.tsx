@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { AppShell } from "@/components/layout/app-shell";
+import { PlanMarkdown } from "@/components/plan-markdown";
 import { Button } from "@/components/ui/button";
 import { MatchRing } from "@/components/match-ring";
 import { SkillMeter } from "@/components/skill-meter";
@@ -194,7 +195,7 @@ function StudentDash() {
                 Built from your ratings and the catalog — a working plan, not a raw error.
               </p>
             ) : null}
-            <pre className="mt-4 whitespace-pre-wrap font-sans text-sm leading-relaxed text-foreground">{plan}</pre>
+            <PlanMarkdown text={plan} />
           </>
         ) : null}
       </section>
