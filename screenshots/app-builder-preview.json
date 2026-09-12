@@ -1,0 +1,36 @@
+{
+  "url": "http://127.0.0.1:8080/",
+  "viewports": {
+    "desktop": {
+      "width": 1280,
+      "height": 800,
+      "status": 200,
+      "title": "SkillBridge",
+      "hasCanvas": false,
+      "bodyTextLen": 2301,
+      "bodyTextHash": "20a3dd5ef141824af55766d4644c2aa1a1a2fcf02ae593cd418b053ce0102bad",
+      "bodyTextPrefix": "SkillBridge Learn Internships Assess CAMPUS TO CAREER The shorte",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-preview.png"
+    },
+    "mobile": {
+      "width": 390,
+      "height": 844,
+      "status": 200,
+      "title": "SkillBridge",
+      "hasCanvas": false,
+      "bodyTextLen": 2263,
+      "bodyTextHash": "3eefe0929ce5fa2cd71ce01761a4aa7b9331d7b644b89809947ed3bcedb4f472",
+      "bodyTextPrefix": "SkillBridge CAMPUS TO CAREER The shortest path from classroom to",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-preview-mobile.png"
+    }
+  },
+  "brandWarnings": [],
+  "authWarnings": [],
+  "verdictFile": "/workspace/screenshots/app-builder-preview.json"
+}
