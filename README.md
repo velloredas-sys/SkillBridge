@@ -2,189 +2,110 @@
 
 # 🌉 SkillBridge
 
-**Campus-to-career portal for SIH 2026 — Problem Statement SIH26044**
-*Skill mapping · Internships · Placement*
+**A skill map, not another portal.**
+Students learn and prove skills → SkillBridge matches them to real internships and jobs → colleges see the gaps.
 
-[![Status](https://img.shields.io/badge/status-active-2ea44f)](#)
-[![Stack](https://img.shields.io/badge/stack-React%2019%20%C2%B7%20TanStack%20Start-3178c6)](#tech-stack)
-[![Database](https://img.shields.io/badge/database-PostgreSQL%20(Neon)-336791)](#persistence)
-[![License](https://img.shields.io/badge/license-hackathon%20project-lightgrey)](#)
+[![Status](https://img.shields.io/badge/status-live-2ea44f)](https://skill-bridge-5pb65mykp-arya-bhatta-0.vercel.app/)
+[![Try it](https://img.shields.io/badge/try%20it-open%20app-3178c6)](https://skill-bridge-5pb65mykp-arya-bhatta-0.vercel.app/)
+
+**🔗 [Open the live app](https://skill-bridge-5pb65mykp-arya-bhatta-0.vercel.app/)**
 
 </div>
 
 <br>
 
-Students assess their skills, follow sequenced free YouTube roadmaps, and match with internships and jobs. Recruiters post roles and review applicants. Colleges see cohort-level skill gaps against industry demand.
+## 🧭 What is SkillBridge?
 
-<div align="center">
-<img src="./screenshots/jobs.png" alt="Opportunities board" width="85%">
+Built for **SIH 2026 — Problem Statement SIH26044** (skill mapping, internships, placement), SkillBridge gives each kind of user one honest view of the same data:
 
-<sub>The opportunities board — internships and jobs scored against a student's skills</sub>
-</div>
-
-<br>
-
-## 📖 Contents
-
-- [Features](#-features)
-- [Tech stack](#-tech-stack)
-- [What is real vs. demo](#-what-is-real-vs-demo)
-- [Persistence](#-persistence)
-- [Run locally](#-run-locally)
-- [Scripts](#-scripts)
-- [AI-generated 8-week plan](#-ai-generated-8-week-plan-groq)
-- [Deploy on Vercel](#-deploy-on-vercel)
-- [Team](#-team--aryabhatta-0)
-
-<br>
-
-## ✨ Features
-
-There are three account roles — **student**, **industry** (recruiter), and **college** — each with a different view of the same data.
-
-| Route | For | What it does |
-|:---|:---|:---|
-| `/assess` | Student | Short multiple-choice quizzes per skill; an assessed level replaces self-rated level in match scores |
-| `/learn` | Student | Searchable catalog of sequenced, free YouTube roadmaps by skill |
-| `/opportunities` | Student | Internship/job board, filterable by type, scored against the student's skills |
-| `/portfolio` | Student | Add projects, certifications, and achievements, tagged to skills |
-| `/applications` | Student | Track status of applications submitted from the opportunities board |
-| `/dashboard` | Student | Skill match ring, gap analysis vs. a chosen career goal, recommended next lessons |
-| `/recruit` | Industry | Post internships/jobs, review applicants, update application status |
-| `/analytics` | College | Cohort skill averages vs. national/industry demand, aggregate demand gaps |
-
-<details>
-<summary><b>📸 Screenshots</b> — click to expand</summary>
-<br>
-
-| Login | Learn catalog | Job detail |
-|:---:|:---:|:---:|
-| ![Login](./screenshots/login.png) | ![Learn](./screenshots/learn.png) | ![Job detail](./screenshots/job-detail.png) |
-
-More in [`/screenshots`](./screenshots).
-
-</details>
-
-<br>
-
-## 🛠️ Tech stack
-
-| Layer | What |
+| Who | What they get |
 |:---|:---|
-| App | React 19, TanStack Start (SSR), TanStack Router/Query |
-| UI | Tailwind CSS v4, Radix, Lucide, shadcn-style components |
-| Forms/validation | React Hook Form, Zod |
-| Data layer | Kysely (query builder) over PostgreSQL (`pg`) |
-| Auth | Better Auth — Google + email/password |
-| Database | PostgreSQL (Neon on Vercel). Sandbox preview uses embedded PGLite |
-| Charts | Recharts (cohort analytics) |
-| AI plan | Groq `openai/gpt-oss-120b` when `GROQ_API_KEY` is set; otherwise a local 8-week plan generated from skill gaps |
+| 🎓 **Students** | Assess real skill level (not self-rated guesses), follow short free-video roadmaps, and see a live match score against internships/jobs |
+| 🏢 **Recruiters** | Post roles and see applicants ranked by verified, not claimed, skill |
+| 🏫 **Colleges** | See where their whole cohort is weak against what industry is actually hiring for |
 
 <br>
 
-## 🎭 What is real vs. demo
+## 🚀 How to use it
 
-| | Behavior |
-|:---|:---|
-| ✅ **Real** *(tied to the signed-in account)* | Profile, role, skill ratings, quiz results, lesson progress, portfolio, applications, recruiter-posted jobs |
-| 🎪 **Demo** | The seeded Razorpay / Google / Zoho / … job board. Rows are labelled **Demo posting**. Applying does **not** email a recruiter — it still stores the application on the student account |
+### 1. Sign in
 
-<br>
+Open the [live app](https://skill-bridge-5pb65mykp-arya-bhatta-0.vercel.app/) and sign in with Google or email — no approval or setup needed, you're in immediately.
 
-## 💾 Persistence
+<img src="./screenshots/login.png" alt="Sign in screen" width="90%">
 
-**On a real deploy** *(with `DATABASE_URL` set to Neon/Postgres)*
-- Profile, skills, portfolio, and applications live in Postgres, keyed by `user_id` (see [`migrations/0002_skillbridge.sql`](./migrations/0002_skillbridge.sql) for the schema: `profiles`, `student_skills`, `assessments`, `portfolio_items`, and related tables).
-- Signing in again with the same Google or email account — on another device, months later — loads the same rows.
+### 2. Tell it who you are
 
-**Sandbox live preview**
-- Uses a local database that **resets when the preview sleeps**. This is preview-only behavior and does not apply to a real deploy.
+Right after signing in, pick a role. This decides what your account can see and do — you can't be a student and a recruiter on the same account.
+
+<img src="./screenshots/after-signup.png" alt="Role picker: Student, Recruiter, College" width="90%">
 
 <br>
 
-## 🚀 Run locally
+### 🎓 If you're a Student
 
-```bash
-npm install
-npm run dev
-```
+**Assess your skills** — go to **Assess**, take a short multiple-choice quiz per skill. Your assessed level replaces any self-rating everywhere else in the app, including match scores.
 
-The dev server runs on `http://localhost:8080`.
+**Learn what you're missing** — go to **Learn** to browse the roadmap catalog: short, sequenced, free YouTube courses per skill, picked and ordered like a senior would recommend, not a dumped link list.
 
-- Email/password sign-in works with no extra setup.
-- Google sign-in in the local sandbox goes through a shared OAuth broker, so the consent screen may not show the "SkillBridge" brand. To brand Google sign-in as **SkillBridge**, register your own OAuth client in Google Cloud Console and deploy with those credentials.
+<img src="./screenshots/learn.png" alt="Learn catalog" width="90%">
 
-<br>
+Open any roadmap to get an ordered lesson list with a "start here → go deeper" path. Mark lessons complete as you go.
 
-## 📜 Scripts
+<img src="./screenshots/python-bro.png" alt="Roadmap detail page with lesson list" width="90%">
 
-| Command | Purpose |
-|:---|:---|
-| `npm run dev` | Start the dev server (port 8080) |
-| `npm run build` | Production build, then runs DB migrations |
-| `npm run preview` | Preview the production build locally |
-| `npm run typecheck` | TypeScript, no emit |
-| `npm run lint` | ESLint |
-| `npm run format` | Prettier, write mode |
-| `npm test` | Node test runner over `scripts/**/*.test.mjs` plus the app-data and auth unit tests |
-| `npm run db:migrate` | Apply SQL migrations in `migrations/` |
-| `npm run check:auth` | Verifies the auth invariant script (`scripts/check-auth-invariant.mjs`) |
+**Find a role** — go to **Internships** to browse the job board. Filter by internship/job and search by company or title.
 
-<br>
+<img src="./screenshots/jobs.png" alt="Opportunities board" width="90%">
 
-## 🤖 AI-generated 8-week plan (Groq)
+**Check your match and apply** — open any listing to see exactly which required skills you're strong or weak in, with one-click links to go study the gap.
 
-1. Create an API key at [console.groq.com](https://console.groq.com).
-2. Set the **server-side** environment variable `GROQ_API_KEY`:
-   - Vercel: **Project → Settings → Environment Variables → `GROQ_API_KEY`** → apply to Production (and Preview).
-   - Never paste the key into chat or client-side code.
-3. Redeploy.
+<img src="./screenshots/job-detail.png" alt="Job detail with required-skill match bars" width="90%">
 
-> If the key is missing or the Groq API call fails, the app falls back to a useful gap-based 8-week plan generated locally — no raw error codes are shown to the user.
+**Keep track of yourself** — your **Dashboard** shows an overall match ring and skill gaps against a career goal you pick; **Portfolio** lets you attach projects/certifications/achievements to specific skills; **Applications** tracks the status of everything you've applied to.
+
+### 🏢 If you're a Recruiter
+
+Go to **Recruit** to post an internship or job with required skills. Applicants show up ranked by assessed match, and you can update each applicant's status (e.g. shortlisted, rejected).
+
+### 🏫 If you're from a College
+
+Go to **Analytics** to see your students' average skill levels by category, compared against national averages and current industry demand — so you know exactly where the cohort needs to catch up.
 
 <br>
 
-## ☁️ Deploy on Vercel
+## 🎭 A note on the data
 
-1. Push this repo to GitHub.
-2. Import the repo into Vercel (build command `npm run build`; output targets Nitro/Vercel).
-3. Add environment variables:
+To make the app meaningful to try immediately, the job board is pre-seeded with a **Demo posting** — companies like Razorpay, Google, and Zoho — clearly labelled as such in the listing. Applying to one doesn't email a real recruiter, but it *does* save the match to your account like a real application would.
 
-   | Variable | Required | Purpose |
-   |:---|:---|:---|
-   | `DATABASE_URL` | Yes | Neon (or any Postgres) connection string |
-   | `GROQ_API_KEY` | No | Enables AI-written 8-week plans |
-   | `BETTER_AUTH_URL`, `BETTER_AUTH_SECRET`, Google OAuth credentials | For Google sign-in | Auth configuration |
+Everything else — your profile, skill levels, quiz results, lesson progress, portfolio, and applications — is real and tied to your signed-in account, and persists across sessions.
 
-4. Run the SQL migrations in `migrations/` against that database, in order: `0001_auth.sql`, then `0002_skillbridge.sql` *(this also runs automatically as part of `npm run build`)*.
+<br>
 
-> **Note for teammates and judges:** use the **Vercel URL** to evaluate the app, not any local sandbox preview — a local preview is machine-locked and can expire or reset.
+## ⚙️ Under the hood
+
+<sub>Quick context, not a build manual — the point of this README is using the app, not building it.</sub>
+
+SkillBridge is a React 19 + TanStack Start app on Postgres (Neon), with skill-matching logic and an optional AI-generated 8-week study plan (falls back to a rule-based plan if no AI key is set). Development was AI-assisted — we planned the features, made the architecture calls, and did the debugging and stress-testing ourselves rather than one-shotting it.
 
 <br>
 
 ## 👥 Team — AryaBhatta-0
 
-<div align="center">
-
-Built for our first hackathon by a four-person team, all first-year CSE students.
+First-year CSE students, first hackathon.
 
 | Member | Role |
 |:---:|:---:|
-| **Soumyadip** | Full-stack developer — built SkillBridge (this app) |
-| **Bidhan** | Full-stack developer — also built his own app for this hackathon |
-| **Samrat** | Presentation |
-| **Komal** | Presentation |
+| **Samrat** | Team lead — formed the team, planned the presentation, and assigned everyone a clear role |
+| **Snehashish** | Found SIH26044 and pitched the idea for what to build |
+| **Soumyadip** | Full-stack developer — built SkillBridge (AI-assisted) |
+| **Bidhan** | Full-stack developer — strong on backend; also built his own app for this hackathon |
+| **Komal** | Led the presentation delivery; also suggested SkillBridge's in-app **Learn** player, so lessons play right inside the app instead of sending students to YouTube |
+| **Md Shahrukh Ali** | Joined later; handled slides and supported the presentation |
 
-</div>
-
-Soumyadip and Bidhan handled development together; Samrat and Komal put together a strong presentation of the product.
-
-It's 2026, so development leaned on AI assistance — but not "vibe coding." We planned the feature set ourselves, made our own architecture and product decisions, and did the actual debugging by hand: writing test cases, stress-testing flows (auth, skill matching, applications), and fixing what broke. AI helped us move faster and learn faster, not replace the thinking.
-
-As first-years going into our first hackathon, the biggest win wasn't just the app — it was learning to plan together, split work by strength, and iterate as a team. We came out of it with a working product and a lot more confidence for the next one.
-
-<br>
+The best part wasn't just shipping something that works — it was planning it together as first-years and actually pulling it off as a team.
 
 <div align="center">
-<sub>Made with ☕ and a lot of stress-testing by Team AryaBhatta-0</sub>
+<br>
+<sub>Made with ☕ by Team AryaBhatta-0</sub>
 </div>
