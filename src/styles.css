@@ -1,0 +1,100 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Instrument Serif", ui-serif, Georgia, "Times New Roman", serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  --color-background: #f3efe6;
+  --color-foreground: #161513;
+  --color-card: #fffdf8;
+  --color-card-foreground: #161513;
+  --color-primary: #1b6b4a;
+  --color-primary-foreground: #f4fbf7;
+  --color-secondary: #2c2620;
+  --color-secondary-foreground: #f3efe6;
+  --color-muted: #ece7db;
+  --color-muted-foreground: #5c5850;
+  --color-accent: #e4f0e9;
+  --color-accent-foreground: #134d36;
+  --color-border: #e4ddd0;
+  --color-input: #ddd6c8;
+  --color-ring: #1b6b4a;
+  --color-destructive: #b42318;
+  --color-destructive-foreground: #fff7f6;
+  --color-paper: #f3efe6;
+  --color-ink: #161513;
+  --color-bark: #2c2620;
+  --color-forest: #1b6b4a;
+  --color-forest-dark: #134d36;
+  --color-moss: #3d7a5c;
+  --color-sage: #e4f0e9;
+  --color-line: #e4ddd0;
+  --color-cream: #fffdf8;
+  --color-warn: #b45309;
+  --color-ok: #1b6b4a;
+
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --radius-xl: 28px;
+  --radius-2xl: 36px;
+
+  --shadow-soft: 0 1px 2px rgb(22 21 19 / 0.04), 0 8px 24px rgb(22 21 19 / 0.06);
+}
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    line-height: 1.5;
+  }
+
+  h1,
+  h2,
+  h3,
+  .font-display {
+    font-family: var(--font-display);
+    letter-spacing: -0.03em;
+    text-wrap: balance;
+    line-height: 1.15;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+
+  ::selection {
+    background: color-mix(in oklab, var(--color-forest) 22%, transparent);
+    color: var(--color-ink);
+  }
+
+  input,
+  textarea,
+  select {
+    font: inherit;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
