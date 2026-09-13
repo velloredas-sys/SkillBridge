@@ -11,6 +11,7 @@ export type Profile = {
   location: string;
   yearLabel: string;
   careerGoal: string;
+  avatarUrl: string;
 };
 
 export type SkillRow = {
