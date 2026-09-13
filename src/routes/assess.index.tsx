@@ -31,12 +31,7 @@ function Inner() {
           const row = skills[id];
           const n = QUESTIONS[id]?.length ?? 0;
           return (
-            <Link
-              key={id}
-              to="/assess/$skillId"
-              params={{ skillId: id }}
-              className="rounded-xl border border-border bg-card p-4 hover:border-primary/40"
-            >
+            <div key={id} className="rounded-xl border border-border bg-card p-4 hover:border-primary/40">
               <div className="flex items-start justify-between gap-3">
                 <div>
                   <h2 className="font-sans text-base font-semibold">{skill?.name ?? id}</h2>
@@ -48,7 +43,15 @@ function Inner() {
                   <Badge>Not taken</Badge>
                 )}
               </div>
-            </Link>
+              <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-sm">
+                <Link to="/assess/$skillId" params={{ skillId: id }} className="font-medium text-primary hover:underline">
+                  Take quiz
+                </Link>
+                <Link to="/assess/$skillId/beta" params={{ skillId: id }} className="font-medium text-primary hover:underline">
+                  Try AI Beta (30 Qs)
+                </Link>
+              </div>
+            </div>
           );
         })}
       </div>
