@@ -172,12 +172,27 @@ const grokOAuthPlugin = authConfigured
     })
   : null;
 
+/**
+ * Real, app-owned Google sign-in — separate from the Grok broker above.
+ * Set GOOGLE_CLIENT_ID + GOOGLE_CLIENT_SECRET (from Google Cloud Console)
+ * to enable it. Better Auth's callback path is fixed at
+ * `${baseURL}/api/auth/callback/google` — that's the exact Redirect URI to
+ * register in the Google Cloud Console OAuth client.
+ */
+const googleClientId = env("GOOGLE_CLIENT_ID");
+const googleClientSecret = env("GOOGLE_CLIENT_SECRET");
+export const googleAuthConfigured = Boolean(googleClientId && googleClientSecret);
+
 export const auth = betterAuth({
   baseURL,
   // Deployed apps inject BETTER_AUTH_SECRET. Preview: process-stable secret on
   // globalThis so HMR doesn't invalidate PGLite-backed sessions (see above).
   secret: env("BETTER_AUTH_SECRET") ?? previewAuthSecret(),
   database,
+
+  ...(googleAuthConfigured
+    ? { socialProviders: { google: { clientId: googleClientId!, clientSecret: googleClientSecret! } } }
+    : {}),
 
   // CSRF / origin check for credentialed auth POSTs (email sign-up/sign-in, …).
   // See `trustedOrigins` construction above — must cover live preview hosts AND
