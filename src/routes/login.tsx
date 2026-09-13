@@ -1,5 +1,5 @@
 import { createFileRoute, Link, Navigate } from "@tanstack/react-router";
-import { GROK_PROVIDERS, authClient, authEnabled, signIn } from "@/lib/auth/client";
+import { authClient, authEnabled } from "@/lib/auth/client";
 import { useCurrentUserState } from "@/lib/auth/use-current-user";
 import { Wordmark } from "@/components/mark";
 import { Button } from "@/components/ui/button";
@@ -39,6 +39,22 @@ function Login() {
     }
   }
 
+  async function onGoogle() {
+    setError(null);
+    setBusy(true);
+    try {
+      const { data, error: signInError } = await authClient.signIn.social({
+        provider: "google",
+        callbackURL: "/dashboard",
+      });
+      if (signInError) throw new Error(signInError.message || "Could not start Google sign-in");
+      if (data?.url) window.location.href = data.url;
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Google sign-in is not set up yet");
+      setBusy(false);
+    }
+  }
+
   return (
     <div className="grid min-h-dvh lg:grid-cols-2">
       <div className="hidden flex-col justify-between bg-bark p-10 text-cream lg:flex">
@@ -66,17 +82,15 @@ function Login() {
           ) : (
             <>
               <div className="mt-6 space-y-2">
-                {GROK_PROVIDERS.filter((p) => p.idp !== "twitter").map((p) => (
-                  <Button
-                    key={p.providerId}
-                    type="button"
-                    variant="outline"
-                    className="w-full"
-                    onClick={() => signIn(p.providerId, { callbackURL: "/dashboard" })}
-                  >
-                    Continue with {p.label}
-                  </Button>
-                ))}
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="w-full"
+                  disabled={busy}
+                  onClick={onGoogle}
+                >
+                  Continue with Google
+                </Button>
               </div>
               <div className="my-6 flex items-center gap-3 text-xs uppercase tracking-widest text-muted-foreground">
                 <span className="h-px flex-1 bg-border" />
