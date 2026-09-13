@@ -27,6 +27,37 @@ function ProfilePage() {
   );
 }
 
+/** Downscale + crop to a square JPEG so the photo stays tiny (a few KB to
+ * ~50KB) — cheap to store as a plain text column and cheap to send back down
+ * on every page load. Runs entirely in the browser before we touch the network. */
+const AVATAR_SIZE = 200;
+
+function resizeAvatarFile(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = () => reject(new Error("Could not read that file"));
+    reader.onload = () => {
+      const img = new Image();
+      img.onerror = () => reject(new Error("That doesn't look like an image"));
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        canvas.width = AVATAR_SIZE;
+        canvas.height = AVATAR_SIZE;
+        const ctx = canvas.getContext("2d");
+        if (!ctx) return reject(new Error("Could not process image"));
+        // Crop to a centered square before scaling, so faces don't get squashed.
+        const side = Math.min(img.width, img.height);
+        const sx = (img.width - side) / 2;
+        const sy = (img.height - side) / 2;
+        ctx.drawImage(img, sx, sy, side, side, 0, 0, AVATAR_SIZE, AVATAR_SIZE);
+        resolve(canvas.toDataURL("image/jpeg", 0.85));
+      };
+      img.src = reader.result as string;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
 function Inner() {
   const { me } = useMe();
   const profile = me?.profile;
@@ -40,6 +71,8 @@ function Inner() {
   const [yearLabel, setYearLabel] = useState("");
   const [careerGoal, setCareerGoal] = useState("");
   const [role, setRole] = useState<UserRole>("student");
+  const [avatarUrl, setAvatarUrl] = useState("");
+  const [avatarBusy, setAvatarBusy] = useState(false);
 
   useEffect(() => {
     if (!profile) return;
@@ -52,6 +85,7 @@ function Inner() {
     setYearLabel(profile.yearLabel);
     setCareerGoal(profile.careerGoal);
     setRole(profile.role);
+    setAvatarUrl(profile.avatarUrl);
   }, [profile]);
 
   const mut = useMutation({
@@ -67,6 +101,7 @@ function Inner() {
           location,
           yearLabel,
           careerGoal,
+          avatarUrl,
         },
       }),
     onSuccess: () => {
@@ -75,6 +110,22 @@ function Inner() {
     },
     onError: (e) => toast.error(e instanceof Error ? e.message : "Could not save"),
   });
+
+  async function handleAvatarPick(file: File | undefined) {
+    if (!file) return;
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please choose an image file");
+      return;
+    }
+    setAvatarBusy(true);
+    try {
+      setAvatarUrl(await resizeAvatarFile(file));
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Could not use that photo");
+    } finally {
+      setAvatarBusy(false);
+    }
+  }
 
   if (!profile) return null;
 
@@ -90,6 +141,45 @@ function Inner() {
       <p className="text-sm text-muted-foreground">
         Switch workspaces without creating a new account. Skills, applications, and portfolio stay on this login.
       </p>
+      <div>
+        <Label>Profile photo</Label>
+        <div className="mt-2 flex items-center gap-4">
+          {avatarUrl ? (
+            <img
+              src={avatarUrl}
+              alt=""
+              className="h-16 w-16 rounded-full object-cover"
+            />
+          ) : (
+            <span className="grid h-16 w-16 place-items-center rounded-full bg-sage text-lg font-medium">
+              {(name || "?").charAt(0).toUpperCase()}
+            </span>
+          )}
+          <div className="flex flex-wrap items-center gap-2">
+            <Button asChild variant="outline" type="button">
+              <label className="cursor-pointer">
+                {avatarBusy ? "Processing…" : avatarUrl ? "Change photo" : "Upload photo"}
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  disabled={avatarBusy}
+                  onChange={(e) => handleAvatarPick(e.target.files?.[0])}
+                />
+              </label>
+            </Button>
+            {avatarUrl ? (
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setAvatarUrl("")}
+              >
+                Remove
+              </Button>
+            ) : null}
+          </div>
+        </div>
+      </div>
       <div>
         <Label>Workspace</Label>
         <div className="mt-2 grid gap-2">
