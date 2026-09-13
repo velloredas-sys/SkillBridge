@@ -81,6 +81,13 @@ function QuizInner() {
       <p className="text-sm font-medium uppercase tracking-[0.18em] text-primary">Quiz</p>
       <h1 className="mt-2 text-3xl">{skill?.name ?? skillId}</h1>
       <p className="mt-1 text-sm text-muted-foreground">{questions.length} questions · no timer</p>
+      <Link
+        to="/assess/$skillId/beta"
+        params={{ skillId }}
+        className="mt-1 inline-block text-sm font-medium text-primary hover:underline"
+      >
+        Try the AI Beta version (30 questions) →
+      </Link>
       <form
         className="mt-8 space-y-8"
         onSubmit={(e) => {
