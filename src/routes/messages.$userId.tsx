@@ -179,7 +179,7 @@ function Inner() {
                 {m.attachmentKind === "image" ? (
                   <img src={m.attachmentData} alt={m.attachmentName || "attachment"} className="mb-1 max-h-64 rounded-lg object-contain" />
                 ) : m.attachmentKind === "file" ? (
-                  
+                  <a
                     href={m.attachmentData}
                     download={m.attachmentName || "file"}
                     className={cn(
