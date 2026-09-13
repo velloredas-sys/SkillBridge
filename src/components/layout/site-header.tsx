@@ -113,9 +113,19 @@ export function SiteHeader({ ink = false }: { ink?: boolean }) {
 export function SiteFooter() {
   return (
     <footer className="mt-auto border-t border-border">
-      <div className="mx-auto flex max-w-6xl flex-col gap-2 px-4 py-8 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
+      <div className="mx-auto flex max-w-6xl flex-col gap-3 px-4 py-8 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
         <p>SkillBridge — academia and industry, on one map.</p>
-        <p>SIH26044 · Skill mapping, internships, placement.</p>
+        <div className="flex items-center gap-4">
+          <p>SIH26044 · Skill mapping, internships, placement.</p>
+          <nav className="flex items-center gap-4">
+            <Link to="/privacy" className="hover:text-foreground">
+              Privacy
+            </Link>
+            <Link to="/terms" className="hover:text-foreground">
+              Terms
+            </Link>
+          </nav>
+        </div>
       </div>
     </footer>
   );
