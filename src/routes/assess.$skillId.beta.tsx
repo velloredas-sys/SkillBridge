@@ -9,7 +9,7 @@ import { ROADMAPS } from "@/lib/catalog/roadmaps";
 import { generateAiQuiz, submitAiQuiz } from "@/lib/server/ai-quiz";
 import { cn } from "@/lib/utils";
 
-export const Route = createFileRoute("/assess/$skillId/beta")({ component: BetaQuizPage });
+export const Route = createFileRoute("/assess/$skillId_/beta")({ component: BetaQuizPage });
 
 type ClientQuestion = { id: string; prompt: string; choices: { id: string; text: string }[] };
 
