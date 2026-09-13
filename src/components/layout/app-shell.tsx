@@ -2,6 +2,7 @@ import { Link, useRouterState } from "@tanstack/react-router";
 import { SiteFooter, SiteHeader } from "./site-header";
 import { RequireAuth, PageSkeleton } from "@/components/require-auth";
 import { useMe } from "@/hooks/use-me";
+import { useUnreadMessages } from "@/hooks/use-unread-messages";
 import {
   BookOpen,
   Briefcase,
@@ -10,7 +11,9 @@ import {
   GraduationCap,
   LayoutDashboard,
   LineChart,
+  MessageCircle,
   UserRound,
+  Users,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { ReactNode } from "react";
@@ -22,12 +25,16 @@ const studentNav = [
   { to: "/assess", label: "Assess", icon: Gauge },
   { to: "/opportunities", label: "Jobs", icon: Briefcase },
   { to: "/applications", label: "Applied", icon: ClipboardList },
+  { to: "/people", label: "People", icon: Users },
+  { to: "/messages", label: "Messages", icon: MessageCircle },
 ];
 
 const industryNav = [
   { to: "/dashboard", label: "Home", icon: LayoutDashboard },
   { to: "/recruit", label: "Recruit", icon: Briefcase },
   { to: "/opportunities", label: "Board", icon: GraduationCap },
+  { to: "/people", label: "People", icon: Users },
+  { to: "/messages", label: "Messages", icon: MessageCircle },
   { to: "/profile", label: "Profile", icon: UserRound },
 ];
 
@@ -36,6 +43,8 @@ const collegeNav = [
   { to: "/analytics", label: "Analytics", icon: LineChart },
   { to: "/opportunities", label: "Demand", icon: Briefcase },
   { to: "/learn", label: "Catalog", icon: BookOpen },
+  { to: "/people", label: "People", icon: Users },
+  { to: "/messages", label: "Messages", icon: MessageCircle },
   { to: "/profile", label: "Profile", icon: UserRound },
 ];
 
@@ -65,12 +74,14 @@ export function AppShell({
 function AuthedShell({ children }: { children: ReactNode }) {
   const { me, isLoading } = useMe();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const unread = useUnreadMessages();
 
   if (isLoading) return <PageSkeleton />;
   if (!me?.profile) return <Navigate to="/onboarding" />;
 
   const nav =
     me.profile.role === "industry" ? industryNav : me.profile.role === "college" ? collegeNav : studentNav;
+  const bottomNav = [...nav.filter((i) => i.to !== "/messages").slice(0, 4), nav.find((i) => i.to === "/messages")!];
 
   return (
     <div className="flex min-h-dvh flex-col">
@@ -92,6 +103,11 @@ function AuthedShell({ children }: { children: ReactNode }) {
                 >
                   <Icon className="h-4 w-4" />
                   {item.label}
+                  {item.to === "/messages" && unread > 0 ? (
+                    <span className="ml-auto grid h-5 min-w-5 place-items-center rounded-full bg-primary px-1 text-[10px] font-semibold text-primary-foreground">
+                      {unread > 9 ? "9+" : unread}
+                    </span>
+                  ) : null}
                 </Link>
               );
             })}
@@ -113,7 +129,7 @@ function AuthedShell({ children }: { children: ReactNode }) {
       </div>
       <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-background/95 backdrop-blur md:hidden">
         <div className="mx-auto grid max-w-lg grid-cols-5">
-          {nav.slice(0, 5).map((item) => {
+          {bottomNav.map((item) => {
             const active = pathname === item.to || (item.to !== "/dashboard" && pathname.startsWith(item.to));
             const Icon = item.icon;
             return (
@@ -121,12 +137,15 @@ function AuthedShell({ children }: { children: ReactNode }) {
                 key={item.to}
                 to={item.to}
                 className={cn(
-                  "flex h-14 flex-col items-center justify-center gap-0.5 text-[11px] font-medium",
+                  "relative flex h-14 flex-col items-center justify-center gap-0.5 text-[11px] font-medium",
                   active ? "text-primary" : "text-muted-foreground",
                 )}
               >
                 <Icon className="h-4 w-4" />
                 {item.label}
+                {item.to === "/messages" && unread > 0 ? (
+                  <span className="absolute right-6 top-1.5 h-2 w-2 rounded-full bg-primary" />
+                ) : null}
               </Link>
             );
           })}
