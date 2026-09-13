@@ -52,7 +52,22 @@ export type SaveProfileInput = {
   location: string;
   yearLabel: string;
   careerGoal: string;
+  avatarUrl: string;
 };
+
+// Client resizes to a small square JPEG before sending, but never trust that
+// blindly — cap it server-side too so no one can bypass the client and stuff
+// a huge string into the row. ~150KB of base64 covers a decently sharp
+// 200x200 JPEG with room to spare.
+const MAX_AVATAR_DATA_URL_LENGTH = 150_000;
+
+function normalizeAvatarUrl(raw: string): string {
+  const value = raw.trim();
+  if (!value) return "";
+  if (!value.startsWith("data:image/")) throw new Error("Invalid photo");
+  if (value.length > MAX_AVATAR_DATA_URL_LENGTH) throw new Error("Photo is too large");
+  return value;
+}
 
 export const saveProfile = createServerFn({ method: "POST" })
   .middleware([authMiddleware])
@@ -64,15 +79,16 @@ export const saveProfile = createServerFn({ method: "POST" })
     if (role !== "student" && role !== "industry" && role !== "college") {
       throw new Error("Invalid role");
     }
+    const avatarUrl = normalizeAvatarUrl(data.avatarUrl);
     const sql = await getSql();
     await sql`
       insert into profiles (
         user_id, role, name, headline, bio, college_name, company_name,
-        location, year_label, career_goal, updated_at
+        location, year_label, career_goal, avatar_url, updated_at
       ) values (
         ${context.userId}, ${role}, ${name}, ${data.headline.trim()}, ${data.bio.trim()},
         ${data.collegeName.trim()}, ${data.companyName.trim()}, ${data.location.trim()},
-        ${data.yearLabel.trim()}, ${data.careerGoal.trim()}, now()
+        ${data.yearLabel.trim()}, ${data.careerGoal.trim()}, ${avatarUrl}, now()
       )
       on conflict (user_id) do update set
         role = excluded.role,
@@ -84,6 +100,7 @@ export const saveProfile = createServerFn({ method: "POST" })
         location = excluded.location,
         year_label = excluded.year_label,
         career_goal = excluded.career_goal,
+        avatar_url = excluded.avatar_url,
         updated_at = now()
     `;
     return { ok: true as const };
