@@ -1,5 +1,15 @@
 import { parseRequired } from "@/lib/catalog/match";
-import type { Application, Opportunity, PortfolioItem, Profile, SkillRow, UserRole } from "@/lib/types";
+import type {
+  AttachmentKind,
+  Application,
+  ChatMessage,
+  Opportunity,
+  PortfolioItem,
+  Profile,
+  ProfileSummary,
+  SkillRow,
+  UserRole,
+} from "@/lib/types";
 
 function str(v: unknown, fallback = "") {
   return typeof v === "string" ? v : v == null ? fallback : String(v);
@@ -76,6 +86,38 @@ export function mapApplication(row: Record<string, unknown>): Application {
     coverNote: str(row.cover_note),
     status: status === "shortlisted" || status === "rejected" ? status : "applied",
     createdAt: dateish(row.created_at),
+  };
+}
+
+export function mapProfileSummary(row: Record<string, unknown>): ProfileSummary {
+  const role = str(row.role);
+  return {
+    userId: str(row.user_id),
+    role: role === "industry" || role === "college" ? role : "student",
+    name: str(row.name),
+    headline: str(row.headline),
+    avatarUrl: str(row.avatar_url),
+    collegeName: str(row.college_name),
+    companyName: str(row.company_name),
+  };
+}
+
+function attachmentKind(v: unknown): AttachmentKind | null {
+  return v === "image" || v === "file" ? v : null;
+}
+
+export function mapMessage(row: Record<string, unknown>): ChatMessage {
+  return {
+    id: num(row.id),
+    senderId: str(row.sender_id),
+    recipientId: str(row.recipient_id),
+    body: str(row.body),
+    attachmentKind: attachmentKind(row.attachment_kind),
+    attachmentName: str(row.attachment_name),
+    attachmentMime: str(row.attachment_mime),
+    attachmentData: str(row.attachment_data),
+    createdAt: dateish(row.created_at),
+    readAt: row.read_at == null ? null : dateish(row.read_at),
   };
 }
 
