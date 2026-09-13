@@ -31,6 +31,7 @@ export function mapProfile(row: Record<string, unknown> | undefined | null): Pro
     location: str(row.location),
     yearLabel: str(row.year_label),
     careerGoal: str(row.career_goal),
+    avatarUrl: str(row.avatar_url),
   };
 }
 
